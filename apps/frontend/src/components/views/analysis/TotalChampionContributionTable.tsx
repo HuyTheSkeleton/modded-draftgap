@@ -1,3 +1,4 @@
+import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
 import {
     CellContext,
     ColumnDef,
@@ -139,6 +140,38 @@ export const TotalChampionContributionTable: Component<Props> = (_props) => {
                         .reduce((a, b) => a + b, 0)}
                 />
             ),
+            meta: {
+                headerClass: "w-1",
+                footerClass: "w-1",
+            },
+        },
+        // MOVED TO THE END AND FIXED MATH
+        {
+            header: "Delta",
+            accessorFn: (result) => {
+                // Calculate difference from 50% (Average)
+                // e.g., 55.43% -> +5.43 | 48.00% -> -2.00
+                const championWinrate = ratingToWinrate(result.totalRating) * 100;
+                return championWinrate - 50;
+            },
+            cell: (info) => {
+                const delta = info.getValue<number>();
+                const isPositive = delta > 0;
+                const isZero = delta === 0;
+
+                return (
+                    <div
+                        class="flex justify-end font-bold text-base"
+                        classList={{
+                            "text-green-400": isPositive,
+                            "text-red-400": !isPositive && !isZero,
+                            "text-neutral-500": isZero
+                        }}
+                    >
+                        {isPositive ? "+" : ""}{delta.toFixed(2)}%
+                    </div>
+                );
+            },
             meta: {
                 headerClass: "w-1",
                 footerClass: "w-1",
