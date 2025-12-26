@@ -17,6 +17,7 @@ import predictRoles, {
 } from "@draftgap/core/src/role/role-predictor";
 import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
+import { smartSuggestion } from "./smartSuggestion";
 
 export function createDraftAnalysisContext() {
     const { config } = useUser();
@@ -58,11 +59,20 @@ export function createDraftAnalysisContext() {
     const allyRoles = createMemo(() => predictRoles(allyTeamComps()));
     const opponentRoles = createMemo(() => predictRoles(opponentTeamComps()));
 
-    const draftAnalysisConfig = () => ({
-        ignoreChampionWinrates: config.ignoreChampionWinrates,
-        riskLevel: config.riskLevel,
-        minGames: config.minGames,
-    });
+    const draftAnalysisConfig = () => {
+        let ignoreChampionWinrates = config.ignoreChampionWinrates;
+
+        if (smartSuggestion()) {
+            const currentPickCount = allyTeam.filter((p) => p.championKey).length;
+            ignoreChampionWinrates = currentPickCount >= 2;
+        }
+
+        return {
+            ignoreChampionWinrates,
+            riskLevel: config.riskLevel,
+            minGames: config.minGames,
+        };
+    };
 
     const allyDraftAnalysis = createMemo(() => {
         if (!isLoaded()) return undefined;

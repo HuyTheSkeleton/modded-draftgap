@@ -45,6 +45,25 @@ export function FAQDialog() {
             </div>
 
             <div>
+                <h2 class="text-2xl uppercase">What is Smart Suggestion?</h2>
+                <p class="font-body">
+                    Smart Suggestion creates a hybrid drafting strategy inspired
+                    by pro play.
+                    <br />
+                    <br />
+                    <strong>Phase 1 (First 2 Picks):</strong> It prioritizes
+                    "Power Picks" by accounting for raw champion winrates. This
+                    helps secure strong meta champions early in the draft.
+                    <br />
+                    <strong>Phase 2 (Remaining Picks):</strong> It automatically
+                    switches to "Synergy/Counter" mode by ignoring individual
+                    champion winrates. This highlights champions that
+                    specifically complete your team composition, even if their
+                    base winrate is lower.
+                </p>
+            </div>
+
+            <div>
                 <h2 class="text-2xl uppercase">
                     Does DraftGap have any shortcomings?
                 </h2>

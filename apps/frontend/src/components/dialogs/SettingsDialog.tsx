@@ -9,6 +9,7 @@ import {
 } from "@draftgap/core/src/risk/risk-level";
 import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
+import { smartSuggestion, setSmartSuggestion } from "../../contexts/smartSuggestion";
 import {
     DraftTablePlacement,
     StatsSite,
@@ -70,20 +71,54 @@ export default function SettingsDialog() {
             </DialogHeader>
             <div>
                 <h3 class="text-3xl uppercase">Draft</h3>
+
+                <div class="flex space-x-16 items-center justify-between mt-2">
+                    <div class="flex items-center gap-1">
+                        <span class="text-lg uppercase">
+                            Smart Suggestion
+                        </span>
+                        <Dialog>
+                            <DialogTrigger>
+                                <Icon
+                                    path={questionMarkCircle}
+                                    class="w-5 inline text-neutral-400 -mt-1"
+                                />
+                            </DialogTrigger>
+                            <FAQDialog />
+                        </Dialog>
+                    </div>
+                    <Switch
+                        checked={smartSuggestion()}
+                        onChange={() => {
+                            const newValue = !smartSuggestion();
+                            setSmartSuggestion(newValue);
+
+                            if (newValue) {
+                                setConfig({ ignoreChampionWinrates: false });
+                            }
+                        }}
+                    />
+                </div>
+
                 <div class="flex space-x-16 items-center justify-between mt-2">
                     <span class="text-lg uppercase">
                         Ignore individual champion winrates
                     </span>
                     <Switch
                         checked={config.ignoreChampionWinrates}
-                        onChange={() =>
+                        onChange={() => {
+                            const newValue = !config.ignoreChampionWinrates;
                             setConfig({
-                                ignoreChampionWinrates:
-                                    !config.ignoreChampionWinrates,
-                            })
-                        }
+                                ignoreChampionWinrates: newValue,
+                            });
+
+                            if (newValue) {
+                                setSmartSuggestion(false);
+                            }
+                        }}
                     />
                 </div>
+
                 <div class="flex items-center mt-1 mb-1 gap-1">
                     <span class="text-lg uppercase block">Risk level</span>
                     <Dialog>
